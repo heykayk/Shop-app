@@ -1,1 +1,64 @@
-<p>register works!</p>
+<app-header></app-header>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="login-form mx-auto">
+                <h2 class="login-header">Đăng nhập</h2>
+                <div class="form-group">
+                    <label for="email">Email/phone</label>
+                    <input type="text" class="form-control" id="email">
+                    <div class="divider-nospace"></div>
+                </div>
+
+                <div class="mt-3"></div>
+
+                <div class="form-group password-field">
+                    <label for="email">Mật khẩu</label>
+                    <input type="password" class="form-control" id="password" placeholder="Phải có ít nhất 3 kí tự.">
+                    <i class="password-toggle fa-solid fa-eye"></i>
+                    <div class="divider-nospace"></div>
+                </div>
+
+                <div class="mt-3"></div>
+
+                <div class="form-group password-field">
+                    <label for="email">Nhập lại mật khẩu</label>
+                    <input type="password" class="form-control" id="confirm-password" placeholder="Mật khẩu phải có ít nhất 3 kí tự.">
+                    <i class="password-toggle fa-solid fa-eye"></i>
+                    <div class="divider-nospace"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="full-name">Họ và tên</label>
+                    <input type="text" class="form-control" id="full-name">
+                    <div class="divider-nospace"></div>
+                </div>
+
+                <div class="mt-3"></div>
+
+                <div class="form-group">
+                    <label for="address">Địa chỉ</label>
+                    <input type="text" class="form-control" id="address">
+                    <div class="divider-nospace"></div>
+                </div>
+
+                <div class="mt-3"></div>
+
+                <div class="form-group ">
+                    <div class="form-check checkbox-text">
+                        <span style="display: flex;">
+                            <input type="checkbox" class="form-check-input" is="remember">
+                            <label for="remember" class="form-check-lable text-start">
+                                Tôi đồng ý với các điều khoản
+                            </label>
+                        </span>
+                    </div>
+                </div>
+                <button type="button" class="login-button">Đăng kí</button>
+                <div class="divider"></div>
+                <p class="text-center" style="display: inline-flex;">Bạn đã có tài khoản?</p>
+                <a href="#" class="regiter-link">đăng nhập</a>
+            </div>
+        </div>
+    </div>
+</div>
