@@ -84,4 +84,22 @@ ALTER TABLE orders add COLUMN shipping_date DATE;
 ALTER TABLE orders add COLUMN tracking_number VARCHAR(100);
 ALTER TABLE orders add COLUMN payment_method VARCHAR(100);
 
-CREATE TABLE order_details
+-- XÓA 1 ĐƠN HÀNG => XÓA MỀM => THÊM THUỘC TÍNH active;
+ALTER TABLE orders add COLUMN active TINYINT(1);
+
+-- TRẠNG THÁI ĐƠN HÀNG CHỈ ĐƯỢC PHÉP NHẬN 1 SỐ GIÁ TRỊ => DÙNG MODIFY .. ENUM
+ALTER table orders 
+MODIFY COLUMN status ENUM('pedding', 'processing', 'shipped', 'delivered', 'cancelled')
+COMMENT'Trạng thái đơn hàng';
+
+CREATE TABLE order_details(
+    it INT PRIMARY KEY AUTO_INCREMENT,
+    order_id INT,
+    FOREIGN KEY (order_id) REFERENCES orders(id),
+    product_id INT,
+    FOREIGN KEY(product_id) REFERENCES products(id),
+    price FLOAT CHECK (price >=0),
+    number_of_products INT CHECK(number_of_products > 0),
+    total_money FLOAT CHECK(total_money >= 0),
+    color VARCHAR(20) DEFAULT ''
+);
