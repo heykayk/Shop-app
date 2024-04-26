@@ -1,11 +1,10 @@
 package com.example.shopapp.controllers;
 
-import com.example.shopapp.dtos.CategoryDto;
+import com.example.shopapp.dtos.CategoryDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +24,7 @@ public class CategoryController {
 
     @PostMapping("")
     // nếu đối tượng trả ve là 1 object
-    public ResponseEntity<?> insertCategory(@Valid @RequestBody CategoryDto categoryDto,
+    public ResponseEntity<?> insertCategory(@Valid @RequestBody CategoryDTO categoryDto,
                                                  BindingResult result){
         if(result.hasErrors() == true){
             List<String>  errorMessages = result.getAllErrors()
