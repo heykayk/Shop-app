@@ -1,7 +1,11 @@
 package com.example.shopapp.controllers;
 
 import com.example.shopapp.dtos.CategoryDTO;
+import com.example.shopapp.models.Category;
+import com.example.shopapp.services.CategoryService;
+import com.example.shopapp.services.ICategoryService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -11,15 +15,18 @@ import java.util.List;
 
 @RestController
 @RequestMapping("${api.prefix}/categories")
+@RequiredArgsConstructor
 //@Validated
 public class CategoryController {
+    private final ICategoryService categoryService;
     // get all categories
     @GetMapping("")
-    public ResponseEntity<String> getAllCategories(
+    public ResponseEntity<List<Category>> getAllCategories(
             @RequestParam("page") int page,
             @RequestParam("limit") int limit
     ){
-        return ResponseEntity.ok(String.format("getAllCategory, page = %d, limit = %d", page, limit));
+        List<Category> categories = categoryService.getAllCategories();
+        return ResponseEntity.ok(categories);
     }
 
     @PostMapping("")
@@ -33,16 +40,20 @@ public class CategoryController {
                     .toList();
             return ResponseEntity.badRequest().body(errorMessages);
         }
-        return ResponseEntity.ok("Hello " + categoryDto.getName());
+        categoryService.createCategory(categoryDto);
+        return ResponseEntity.ok("insert category successfully");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateCategory(@PathVariable Long id){
-        return ResponseEntity.ok("update category with id = " + id);
+    public ResponseEntity<String> updateCategory(@PathVariable Long id,
+                                                @Valid @RequestBody CategoryDTO categoryDTO){
+        categoryService.updateCategory(id, categoryDTO);
+        return ResponseEntity.ok("update category Successfully");
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteCategory(@PathVariable Long id){
-        return ResponseEntity.ok("delete category with id = " + id);
+        categoryService.deleteCategory(id);
+        return ResponseEntity.ok("delete category with id = " + id + " successfully");
     }
 }

@@ -1,7 +1,10 @@
 package com.example.shopapp.controllers;
 
 import com.example.shopapp.dtos.ProductDTO;
+import com.example.shopapp.models.Product;
+import com.example.shopapp.services.IProductService;
 import jakarta.validation.*;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +25,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("${api.prefix}/products")
+@AllArgsConstructor
 public class ProductController {
+    private final IProductService productService;
+
     @GetMapping("")
     public ResponseEntity<String> getProduct(
         @RequestParam("page") int page,
@@ -44,6 +50,7 @@ public class ProductController {
                 return ResponseEntity.badRequest().body(errorMessages);
             }
 
+            Product newProduct = productService.createProduct(productDto);
             List<MultipartFile> files = productDto.getFiles();
             files = files == null? new ArrayList<MultipartFile>():files;
 
@@ -63,8 +70,8 @@ public class ProductController {
                 String filename = storeFile(file);
                 // lưu vào đối tượng product trong DB
             }
-
-            return ResponseEntity.ok("Product name = " + productDto.getName());
+            productService.createProduct(productDto);
+            return ResponseEntity.ok("create product successfully");
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
