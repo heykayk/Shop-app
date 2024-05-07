@@ -39,7 +39,7 @@ public class Order {
     private String note;
 
     @Column(name = "order_date")
-    private LocalDateTime orderDate;
+    private Date orderDate;
 
     @Column(name = "status", length = 20)
     private String status;
@@ -56,6 +56,9 @@ public class Order {
 
     @Column(name = "shipping_date")
     private Date shippingDate;
+
+    @Column(name = "payment_method")
+    private String paymentMethod;
 
     private boolean active;// thuộc về admin
 }

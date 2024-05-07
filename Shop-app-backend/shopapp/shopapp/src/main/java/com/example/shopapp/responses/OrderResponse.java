@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Min;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -18,7 +19,7 @@ public class OrderResponse extends BaseRespone {
     private long id;
 
     @JsonProperty("user_id")
-    private User user;
+    private Long userId;
 
     @JsonProperty("fullname")
     private String fullName;
@@ -31,7 +32,7 @@ public class OrderResponse extends BaseRespone {
     private String note;
 
     @JsonProperty("order_date")
-    private LocalDateTime orderDate;
+    private Date orderDate;
 
     private String status;
 
