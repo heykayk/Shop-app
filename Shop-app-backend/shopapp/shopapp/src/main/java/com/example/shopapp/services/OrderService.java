@@ -9,8 +9,11 @@ import com.example.shopapp.repositories.OrderRepository;
 import com.example.shopapp.repositories.UserRepository;
 import com.example.shopapp.responses.OrderResponse;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ast.Or;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -20,8 +23,9 @@ import java.util.Optional;
 public class OrderService implements IOrderService{
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
+    private final ModelMapper modelMapper;
     @Override
-    public OrderResponse createOrder(OrderDTO orderDTO) throws Exception {
+    public Order createOrder(OrderDTO orderDTO) throws Exception {
         Optional<User> optionalUser = userRepository.findById(orderDTO.getUserId());
         User user = optionalUser.orElseThrow(() -> new DataNotFoundException("Cannot find user with id  = " + orderDTO.getUserId()));
 
@@ -43,43 +47,55 @@ public class OrderService implements IOrderService{
         order.setOrderDate(new Date());
         order.setStatus(OrderStatus.PENDING);
 
-        Date shippingDate = orderDTO.getShippingDate();
-        if(shippingDate == null || shippingDate.before(new Date())){
+        LocalDate shippingDate = orderDTO.getShippingDate() == null? LocalDate.now() : order.getShippingDate();
+        if(shippingDate.isBefore(LocalDate.now())){
             throw new DataNotFoundException("Date must be at least today!");
         }
 
-        orderRepository.save(order);
-        return OrderResponse
-                .builder()
-                .id(order.getId())
-                .userId(order.getUser().getId())
-                .fullName(order.getFullName())
-                .phoneNumber(order.getPhoneNumber())
-                .address(order.getAddress())
-                .note(order.getNote())
-                .orderDate(order.getOrderDate())
-                .status(order.getStatus())
-                .totalMoney(order.getTotalMoney())
-                .build();
+        return orderRepository.save(order);
     }
 
     @Override
-    public OrderResponse getOrder(Long id) {
-        return null;
+    public Order getOrder(Long id) throws DataNotFoundException {
+        return orderRepository
+                .findById(id)
+                .orElseThrow(() -> new DataNotFoundException("Cannot find order with od = " + id));
     }
 
     @Override
-    public OrderResponse updateOrder(Long id, OrderDTO orderDTO) {
-        return null;
+    public Order updateOrder(Long id, OrderDTO orderDTO) throws DataNotFoundException {
+        Order existingOrder = orderRepository
+                .findById(id)
+                .orElseThrow(() -> new DataNotFoundException("Cannot find Order with id = " + id));
+
+        User user = userRepository
+                .findById(orderDTO.getUserId())
+                .orElseThrow(() -> new DataNotFoundException("Cannot find user with id = " + orderDTO.getUserId()));
+
+        existingOrder.setFullName(orderDTO.getFullName());
+        existingOrder.setEmail(orderDTO.getEmail());
+        existingOrder.setPhoneNumber(orderDTO.getPhoneNumber());
+        existingOrder.setAddress(orderDTO.getAddress());
+        existingOrder.setNote(orderDTO.getNote());
+        existingOrder.setTotalMoney(orderDTO.getTotalMoney());
+        existingOrder.setShippingMethod(orderDTO.getShippingMethod());
+        existingOrder.setShippingAddress(orderDTO.getShippingAddress());
+        existingOrder.setPaymentMethod(orderDTO.getPaymentMethod());
+
+        return orderRepository.save(existingOrder);
     }
 
     @Override
     public void deleteOrder(Long id) {
-
+        Order order = orderRepository.findById(id).orElse(null);
+        if(order != null){
+            order.setActive(false);
+            orderRepository.save(order);
+        }
     }
 
     @Override
-    public List<OrderResponse> getAllOrders(Long userId) {
-        return null;
+    public List<Order> findByUserId(Long userId) {
+        return orderRepository.findByUserId(userId);
     }
 }

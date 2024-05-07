@@ -28,6 +28,9 @@ public class JwtTokenUtil {
     @Value("${jwt.secretKey}")
     private String secretKey;
 
+//    jwt:
+//      expiration: 2592000
+//      secretKey: 2Y/9RxxpJsjXceU9OTV7knWfzZ1ugO+qp80mVpAv/kg=
     public String generateToken(com.example.shopapp.models.User user) throws Exception{
         // thuộc tính => claims
         Map<String, Object> claims = new HashMap<>();

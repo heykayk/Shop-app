@@ -7,6 +7,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.validation.constraints.Min;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -32,7 +33,7 @@ public class OrderResponse extends BaseRespone {
     private String note;
 
     @JsonProperty("order_date")
-    private Date orderDate;
+    private LocalDate orderDate;
 
     private String status;
 
