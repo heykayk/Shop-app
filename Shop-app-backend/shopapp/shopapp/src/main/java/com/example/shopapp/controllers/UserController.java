@@ -12,6 +12,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("${api.prefix}/users")
@@ -28,7 +29,7 @@ public class UserController {
                 List<String> errorMesages = result.getAllErrors()
                         .stream()
                         .map(ObjectError::getDefaultMessage)
-                        .toList();
+                        .collect(Collectors.toList());
                 return ResponseEntity.badRequest().body(errorMesages);
             }
             if(!userDTO.getPassword().equals(userDTO.getRetypePassword())){

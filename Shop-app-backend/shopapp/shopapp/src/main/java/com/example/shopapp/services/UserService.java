@@ -3,6 +3,7 @@ package com.example.shopapp.services;
 import com.example.shopapp.components.JwtTokenUtil;
 import com.example.shopapp.dtos.UserDTO;
 import com.example.shopapp.exceptions.DataNotFoundException;
+import com.example.shopapp.exceptions.PermissionDenyException;
 import com.example.shopapp.models.Role;
 import com.example.shopapp.models.User;
 import com.example.shopapp.repositories.RoleRepository;
@@ -26,12 +27,17 @@ public class UserService implements IUserService{
     private final JwtTokenUtil jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
     @Override
-    public User createUser(UserDTO userDTO) throws DataNotFoundException {
+    public User createUser(UserDTO userDTO) throws Exception {
         // register user
         String phoneNumber = userDTO.getPhoneNumber();
         // Kểm tra xem phoneNumber đã tồn tại chưa
         if(userRepository.existsByPhoneNumber(phoneNumber)){
             throw new DataIntegrityViolationException("Phone number already exists");
+        }
+        Optional<Role> roleOptional = roleRepository.findById(userDTO.getRoleId());
+        Role role = roleOptional.orElseThrow(() -> new DataNotFoundException("Role not found"));
+        if(role.getName().toUpperCase().equals(Role.ADMIN)){
+            throw new PermissionDenyException("you cannot register admin account");
         }
 
         User newUser = User.builder()
@@ -44,8 +50,6 @@ public class UserService implements IUserService{
                 .facebookAccountId(userDTO.getFacebookAccountId())
                 .googleAccountId(userDTO.getGoogleAccountId())
                 .build();
-        Optional<Role> roleOptional = roleRepository.findById(userDTO.getRoleId());
-        Role role = roleOptional.orElseThrow(() -> new DataNotFoundException("Role not found"));
         newUser.setRole(role);
 
         // kiểm tra xem, nếu có accountId thì khoong yêu cầu mật khẩu
@@ -60,7 +64,7 @@ public class UserService implements IUserService{
     @Override
     public String login(String phoneNumber, String password) throws Exception {
         Optional<User> optionalUser = userRepository.findAllByPhoneNumber(phoneNumber);
-        if(optionalUser.isEmpty()){
+        if(!optionalUser.isPresent()){
             throw new DataNotFoundException("Invalid phonenumber / password");
         }
         User existingUser = optionalUser.get();
@@ -71,6 +75,7 @@ public class UserService implements IUserService{
                 throw new BadCredentialsException("Wrong phone number or password");
             }
         }
+        System.out.println(existingUser.getFullName());
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 phoneNumber, password,
                 existingUser.getAuthorities()

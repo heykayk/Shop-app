@@ -11,6 +11,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("${api.prefix}/orders")
@@ -28,7 +29,7 @@ public class OrderController {
                 List<String> errorMessages = result.getAllErrors()
                         .stream()
                         .map(ObjectError::getDefaultMessage)
-                        .toList();
+                        .collect(Collectors.toList());
                 return ResponseEntity.badRequest().body(errorMessages);
             }
             Order order = orderService.createOrder(orderDTO);
