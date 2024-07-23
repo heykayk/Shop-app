@@ -1,8 +1,9 @@
 package com.example.shopapp.controllers;
 
+import com.example.shopapp.components.LocalizationUtils;
 import com.example.shopapp.dtos.OrderDTO;
 import com.example.shopapp.models.Order;
-import com.example.shopapp.services.IOrderService;
+import com.example.shopapp.services.impl.IOrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderController {
     public final IOrderService orderService;
+    private final LocalizationUtils localizationUtils;
 
     @PostMapping("")
     public ResponseEntity<?> createOrder(

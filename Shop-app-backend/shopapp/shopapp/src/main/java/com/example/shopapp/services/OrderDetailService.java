@@ -8,15 +8,17 @@ import com.example.shopapp.models.Product;
 import com.example.shopapp.repositories.OrderDetailRepository;
 import com.example.shopapp.repositories.OrderRepository;
 import com.example.shopapp.repositories.ProductRepository;
+import com.example.shopapp.services.impl.IOrderDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class OrderDetailService implements IOrderDetailService{
+public class OrderDetailService implements IOrderDetailService {
     public final OrderRepository orderRepository;
     public final OrderDetailRepository orderDetailRepository;
     public final ProductRepository productRepository;
@@ -51,6 +53,7 @@ public class OrderDetailService implements IOrderDetailService{
     }
 
     @Override
+    @Transactional
     public OrderDetail updateOrderDetail(Long id, OrderDetailDTO orderDetailDTO) throws DataNotFoundException {
         OrderDetail existingOrderDetail = orderDetailRepository
                 .findById(id)

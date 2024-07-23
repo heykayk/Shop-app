@@ -1,8 +1,9 @@
 package com.example.shopapp.controllers;
 
+import com.example.shopapp.components.LocalizationUtils;
 import com.example.shopapp.dtos.OrderDetailDTO;
 import com.example.shopapp.models.OrderDetail;
-import com.example.shopapp.services.IOrderDetailService;
+import com.example.shopapp.services.impl.IOrderDetailService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,13 +12,13 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.ResourceBundle;
 
 @RestController
 @RequestMapping("${api.prefix}/order_details")
 @RequiredArgsConstructor
 public class OrderDetailController {
     private final IOrderDetailService orderDetailService;
+    private final LocalizationUtils localizationUtils;
     // thêm mới 1 order detail
     @PostMapping("")
     public ResponseEntity<?> createOrderDetail(

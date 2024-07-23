@@ -7,11 +7,11 @@ import com.example.shopapp.models.OrderStatus;
 import com.example.shopapp.models.User;
 import com.example.shopapp.repositories.OrderRepository;
 import com.example.shopapp.repositories.UserRepository;
-import com.example.shopapp.responses.OrderResponse;
+import com.example.shopapp.services.impl.IOrderService;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ast.Or;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -20,7 +20,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class OrderService implements IOrderService{
+public class OrderService implements IOrderService {
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
     private final ModelMapper modelMapper;
@@ -63,6 +63,7 @@ public class OrderService implements IOrderService{
     }
 
     @Override
+    @Transactional
     public Order updateOrder(Long id, OrderDTO orderDTO) throws DataNotFoundException {
         Order existingOrder = orderRepository
                 .findById(id)

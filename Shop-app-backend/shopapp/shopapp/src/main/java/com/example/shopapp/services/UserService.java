@@ -1,6 +1,7 @@
 package com.example.shopapp.services;
 
-import com.example.shopapp.components.JwtTokenUtil;
+import com.example.shopapp.components.JwtTokenUtils;
+import com.example.shopapp.components.LocalizationUtils;
 import com.example.shopapp.dtos.UserDTO;
 import com.example.shopapp.exceptions.DataNotFoundException;
 import com.example.shopapp.exceptions.PermissionDenyException;
@@ -8,6 +9,8 @@ import com.example.shopapp.models.Role;
 import com.example.shopapp.models.User;
 import com.example.shopapp.repositories.RoleRepository;
 import com.example.shopapp.repositories.UserRepository;
+import com.example.shopapp.services.impl.IUserService;
+import com.example.shopapp.utils.MessageKeys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,12 +23,13 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements IUserService{
+public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtils jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
+    private final LocalizationUtils localizationUtils;
     @Override
     public User createUser(UserDTO userDTO) throws Exception {
         // register user
@@ -62,7 +66,7 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public String login(String phoneNumber, String password) throws Exception {
+    public String login(String phoneNumber, String password, Long roleId) throws Exception {
         Optional<User> optionalUser = userRepository.findAllByPhoneNumber(phoneNumber);
         if(!optionalUser.isPresent()){
             throw new DataNotFoundException("Invalid phonenumber / password");
@@ -72,8 +76,13 @@ public class UserService implements IUserService{
         if(existingUser.getFacebookAccountId() == 0
                 &&  existingUser.getGoogleAccountId() == 0){
             if(!passwordEncoder.matches(password, existingUser.getPassword())){
-                throw new BadCredentialsException("Wrong phone number or password");
+                throw new BadCredentialsException(localizationUtils.getLocalizationMessage(MessageKeys.WRONG_PHONE_PASSWORD));
             }
+        }
+
+        Optional<Role> optionalRole = roleRepository.findById(roleId);
+        if(!optionalRole.isPresent() || !roleId.equals(existingUser.getRole().getId())){
+            throw new BadCredentialsException(localizationUtils.getLocalizationMessage(MessageKeys.WRONG_PHONE_PASSWORD));
         }
         System.out.println(existingUser.getFullName());
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(

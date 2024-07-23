@@ -1,15 +1,17 @@
 package com.example.shopapp.controllers;
 
+import com.example.shopapp.components.LocalizationUtils;
 import com.example.shopapp.dtos.ProductDTO;
 import com.example.shopapp.dtos.ProductImageDTO;
 import com.example.shopapp.models.Product;
 import com.example.shopapp.models.ProductImage;
 import com.example.shopapp.responses.ProductListResponse;
 import com.example.shopapp.responses.ProductResponse;
-import com.example.shopapp.services.IProductService;
+import com.example.shopapp.services.impl.IProductService;
 import com.github.javafaker.Faker;
 import jakarta.validation.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -37,6 +39,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProductController {
     private final IProductService productService;
+    private final LocalizationUtils localizationUtils;
 
     @GetMapping("")
     public ResponseEntity<ProductListResponse> getProduct(
@@ -45,7 +48,8 @@ public class ProductController {
     ){
         PageRequest pageRequest = PageRequest.of(
                 page, limit,
-                Sort.by("createdAt").descending()
+//                Sort.by("createdAt").descending()
+                Sort.by("id").ascending()
         );
         Page<ProductResponse> productPage = productService.getAllProducts(pageRequest);
         // lấy tổng số trang
@@ -118,6 +122,24 @@ public class ProductController {
             }
             return ResponseEntity.ok().body(listProductImages);
         } catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/images/{imageName}")
+    public ResponseEntity<?> viewImgae(@PathVariable String imageName){
+        try{
+            Path imagePath = Paths.get("uploads/" + imageName);
+            UrlResource resource = new UrlResource(imagePath.toUri());
+
+            if(resource.exists()){
+                return ResponseEntity.ok()
+                        .contentType(MediaType.IMAGE_JPEG)
+                        .body(resource);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

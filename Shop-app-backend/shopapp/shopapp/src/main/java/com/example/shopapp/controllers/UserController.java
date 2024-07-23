@@ -3,7 +3,11 @@ package com.example.shopapp.controllers;
 import com.example.shopapp.dtos.UserDTO;
 import com.example.shopapp.dtos.UserLoginDTO;
 import com.example.shopapp.models.User;
-import com.example.shopapp.services.IUserService;
+import com.example.shopapp.responses.LoginResponse;
+import com.example.shopapp.responses.RegisterResponse;
+import com.example.shopapp.services.impl.IUserService;
+import com.example.shopapp.components.LocalizationUtils;
+import com.example.shopapp.utils.MessageKeys;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +23,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserController {
     private final IUserService userService;
+    private final LocalizationUtils localizationUtils;
 
     @PostMapping("/register")
-    public ResponseEntity<?> createUser(
+    public ResponseEntity<RegisterResponse> createUser(
             @Valid @RequestBody UserDTO userDTO,
             BindingResult result){
         try{
@@ -30,27 +35,51 @@ public class UserController {
                         .stream()
                         .map(ObjectError::getDefaultMessage)
                         .collect(Collectors.toList());
-                return ResponseEntity.badRequest().body(errorMesages);
+                return ResponseEntity.badRequest().body(
+                        RegisterResponse.builder()
+                                .message(localizationUtils.getLocalizationMessage(MessageKeys.PASSWORD_NOT_MATCH, errorMesages))
+                                .build()
+                );
             }
             if(!userDTO.getPassword().equals(userDTO.getRetypePassword())){
-                return ResponseEntity.badRequest().body("Password dose not match");
+                return ResponseEntity.badRequest().body(
+                        RegisterResponse.builder()
+                                .message(localizationUtils.getLocalizationMessage(MessageKeys.PASSWORD_NOT_MATCH))
+                                .build()
+                );
             }
-            userService.createUser(userDTO);
-            return ResponseEntity.ok("Register successfully");
+            User user = userService.createUser(userDTO);
+            return ResponseEntity.ok(
+                    RegisterResponse.builder()
+                            .message(localizationUtils.getLocalizationMessage(MessageKeys.REGISTER_SUCCESSFULLY))
+                            .user(user)
+                            .build()
+            );
         }catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(
+                    RegisterResponse.builder()
+                            .message(localizationUtils.getLocalizationMessage(MessageKeys.REGISTER_FAILED, e.getMessage()))
+                            .build()
+            );
         }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(
+    public ResponseEntity<LoginResponse> login(
             @Valid @RequestBody UserLoginDTO userLoginDTO
     ){
         try {
-            String token = userService.login(userLoginDTO.getPhoneNumber(), userLoginDTO.getPassword());
-            return ResponseEntity.ok().body(token);
+            String token = userService.login(userLoginDTO.getPhoneNumber(), userLoginDTO.getPassword(), userLoginDTO.getRoleId());
+            return ResponseEntity.ok().body(LoginResponse
+                    .builder()
+                    .message(localizationUtils.getLocalizationMessage(MessageKeys.LOGIN_SUCCESSFULLY))
+                    .token(token)
+                    .build());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(LoginResponse
+                    .builder()
+                    .message(localizationUtils.getLocalizationMessage(MessageKeys.LOGIN_FAILED, e.getMessage()))
+                    .build());
         }
     }
 }

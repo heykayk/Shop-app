@@ -3,15 +3,17 @@ package com.example.shopapp.services;
 import com.example.shopapp.dtos.CategoryDTO;
 import com.example.shopapp.models.Category;
 import com.example.shopapp.repositories.CategoryRepository;
+import com.example.shopapp.services.impl.ICategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CategoryService implements ICategoryService{
+public class CategoryService implements ICategoryService {
     @Autowired
     private final CategoryRepository categoryRepository;
 
@@ -35,6 +37,7 @@ public class CategoryService implements ICategoryService{
     }
 
     @Override
+    @Transactional
     public Category updateCategory(Long categoryId, CategoryDTO categoryDTO) {
         Category existingCategory = getCategoryById(categoryId);
         existingCategory.setName(categoryDTO.getName());

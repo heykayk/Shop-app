@@ -1,9 +1,11 @@
 package com.example.shopapp.controllers;
 
+import com.example.shopapp.components.LocalizationUtils;
 import com.example.shopapp.dtos.CategoryDTO;
 import com.example.shopapp.models.Category;
-import com.example.shopapp.services.CategoryService;
-import com.example.shopapp.services.ICategoryService;
+import com.example.shopapp.responses.UpdateCategoryResponse;
+import com.example.shopapp.services.impl.ICategoryService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import java.util.List;
 //@Validated
 public class CategoryController {
     private final ICategoryService categoryService;
+    private final LocalizationUtils localizationUtils;
     // get all categories
     @GetMapping("")
     public ResponseEntity<List<Category>> getAllCategories(
@@ -45,10 +48,14 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateCategory(@PathVariable Long id,
-                                                @Valid @RequestBody CategoryDTO categoryDTO){
+    public ResponseEntity<UpdateCategoryResponse> updateCategory(@PathVariable Long id,
+                                                 @Valid @RequestBody CategoryDTO categoryDTO,
+                                                 HttpServletRequest request){
         categoryService.updateCategory(id, categoryDTO);
-        return ResponseEntity.ok("update category Successfully");
+        return ResponseEntity.ok(UpdateCategoryResponse
+                .builder()
+                .message(localizationUtils.getLocalizationMessage("category.update_category"))
+                .build());
     }
 
     @DeleteMapping("/{id}")
