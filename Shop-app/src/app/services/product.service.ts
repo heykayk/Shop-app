@@ -1,31 +1,27 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpClientModule, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
-import { ProductDTO } from '../dtos/product/product.dto';
+import { Product } from '../models/product';
 
 @Injectable({
     providedIn: 'root'
 })
 
 export class ProductService {
-    private apiGetProductUrl = `${environment.apiBaseUrl}/products`;
-
-    private apiConfig = {
-        headers: this.createHeaders()
-    }
-
+    private apiGetProductsUrl = `${environment.apiBaseUrl}/products`;
     constructor(private http: HttpClient) { }
 
-    private createHeaders(): HttpHeaders {
-        return new HttpHeaders({
-            'Content-Type': 'application/json',
-            'Accept-Language': 'vi'
-        });
+    getProducts(keyword: string, categoryId: number, page: number, limit: number): Observable<Product[]> {
+        const params = new HttpParams()
+            .set('category_id', categoryId.toString())
+            .set('keyword', keyword.toString())
+            .set('page', page.toString())
+            .set('limit', limit.toString());
+        return this.http.get<Product[]>(this.apiGetProductsUrl, { params });
     }
 
-    getProduct(page: number, limit: number) {
-        let url = this.apiGetProductUrl + `?page=${page}&limit=${limit}`;
-        return this.http.get(url, this.apiConfig);
+    getProductById(productId: number){
+        return this.http.get(`${environment.apiBaseUrl}/products/${productId}`);
     }
 }

@@ -1,93 +1,40 @@
 <app-header></app-header>
 <div class="container">
     <div class="intro-section">
-        <h1>Đây là trang chi tiết sản phẩm</h1>
-        <p>Sử dụng boostrap</p>
+        <h1>Chi tiết sản phẩm</h1>
     </div>
 
     <div class="row">
         <div class="col-md-6">
             <div class="carousel slide" id="carouseExample" data-bs-ride="carousel">
                 <div class="carousel-inner">
-                    <div class="carousel-item active">
+                    <div class="carousel-item" *ngFor="let image of product?.product_images;let  i = index"
+                        [ngClass]="{'active': i === currentImageIndex}">
                         <div class="square-image">
-                            <img src="https://images.pexels.com/photos/434346/pexels-photo-434346.jpeg?auto=compress&cs=tinysrgb&w=400"
-                                alt="" class="product-image">
+                            <img [src]="image.image_url" alt="" class="product-image fit-img">
                         </div>
                     </div>
                 </div>
 
-                <div class="carousel-inner">
-                    <div class="carousel-item">
-                        <div class="square-image">
-                            <img src="https://images.pexels.com/photos/434346/pexels-photo-434346.jpeg?auto=compress&cs=tinysrgb&w=400"
-                                alt="" class="product-image">
-                        </div>
-                    </div>
-                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouseExample"
+                    data-bs-slide="prev" (click)="previousButtonClick()">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
 
-                <div class="carousel-inner">
-                    <div class="carousel-item">
-                        <div class="square-image">
-                            <img src="https://images.pexels.com/photos/434346/pexels-photo-434346.jpeg?auto=compress&cs=tinysrgb&w=400"
-                                alt="" class="product-image">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="carousel-inner">
-                    <div class="carousel-item">
-                        <div class="square-image">
-                            <img src="https://images.pexels.com/photos/434346/pexels-photo-434346.jpeg?auto=compress&cs=tinysrgb&w=400"
-                                alt="" class="product-image">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="carousel-inner">
-                    <div class="carousel-item">
-                        <div class="square-image">
-                            <img src="https://images.pexels.com/photos/434346/pexels-photo-434346.jpeg?auto=compress&cs=tinysrgb&w=400"
-                                alt="" class="product-image">
-                        </div>
-                    </div>
-                </div>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouseExample"
+                    data-bs-slide="next" (click)="nextButtonClick()">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
             </div>
 
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouseExample" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
 
-            <button class="carousel-control-next" type="button" data-bs-target="#carouseExample" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
             <div class="row">
                 <div class="thumbnail-container">
-                    <div class="thumbnail-item active">
-                        <img src="https://images.pexels.com/photos/434346/pexels-photo-434346.jpeg?auto=compress&cs=tinysrgb&w=400"
-                                alt="Thumbnail Imgae" class="thumbnail-image">
-                    </div>
-
-                    <div class="thumbnail-item">
-                        <img src="https://images.pexels.com/photos/434346/pexels-photo-434346.jpeg?auto=compress&cs=tinysrgb&w=400"
-                                alt="Thumbnail Imgae" class="thumbnail-image">
-                    </div>
-
-                    <div class="thumbnail-item">
-                        <img src="https://images.pexels.com/photos/434346/pexels-photo-434346.jpeg?auto=compress&cs=tinysrgb&w=400"
-                                alt="Thumbnail Imgae" class="thumbnail-image">
-                    </div>
-
-                    <div class="thumbnail-item">
-                        <img src="https://images.pexels.com/photos/434346/pexels-photo-434346.jpeg?auto=compress&cs=tinysrgb&w=400"
-                                alt="Thumbnail Imgae" class="thumbnail-image">
-                    </div>
-
-                    <div class="thumbnail-item">
-                        <img src="https://images.pexels.com/photos/434346/pexels-photo-434346.jpeg?auto=compress&cs=tinysrgb&w=400"
-                                alt="Thumbnail Imgae" class="thumbnail-image">
+                    <div class="thumbnail-item" *ngFor="let image of product?.product_images; let i = index"
+                        [ngClass]="{'active': i===currentImageIndex}" (click)="thumbnailClick(i)">
+                        <img [src]="image.image_url" alt="Thumbnail Imgae" class="thumbnail-image">
                     </div>
                 </div>
             </div>
@@ -95,17 +42,17 @@
         <div class="col-md-6">
             <div class="product-details">
                 <h2>Thông tin chi tiết sản phẩm</h2>
-                <p>Mô tả sản phẩm</p>
-                <p>Giá: $99</p>
+                <p>{{product?.description}}</p>
+                <p>Giá: ${{product?.price}}</p>
                 <div class="product-actions">
                     <button class="btn btn-primary">Thêm vào giỏ hàng</button>
                     <button class="btn btn-success">Mua ngay</button>
                 </div>
                 <div class="product-quantity">
                     <div class="border-wrapper">
-                        <button>-</button>
-                        <input type="text" value="1">
-                        <button>+</button>
+                        <button (click)="decreaseClick()">-</button>
+                        <input type="text" value="{{quantity}}">
+                        <button (click)="increaseClick()">+</button>
                     </div>
                 </div>
             </div>

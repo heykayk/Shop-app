@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -46,15 +47,20 @@ public class ProductService implements IProductService {
 
     @Override
     public Product getProductById(Long id) throws DataNotFoundException {
-        return productRepository.findById(id)
+        Product product =  productRepository.findById(id)
                 .orElseThrow(() ->
                         new DataNotFoundException("Cannot find product with id = " + id));
+        List<ProductImage> productImageList = productImageRepository.findByProductId(id);
+        product.setProductImages(productImageList);
+        return product;
     }
 
     @Override
-    public Page<ProductResponse> getAllProducts(PageRequest pageRequest) {
+    public Page<ProductResponse> getAllProducts(String keyword, Long categoryId,PageRequest pageRequest) {
         // lấy danh sách sản phâm theo page và giới hạn limit
-        return productRepository.findAll(pageRequest).map(ProductResponse::fromProduct);
+        Page<Product> productsPage;
+        productsPage = this.productRepository.searchProducts(categoryId, keyword, pageRequest);
+        return productsPage.map(ProductResponse::fromProduct);
     }
 
     @Override
@@ -101,6 +107,7 @@ public class ProductService implements IProductService {
 
         ProductImage newProductImage = ProductImage.builder()
                 .product(existingProduct)
+//                .productId(existingProduct.getId())
                 .imageUrl(productImageDTO.getImageUrl())
                 .build();
         // Không cho insert quá 5 ảnh cho 1 sản phẩm
