@@ -13,6 +13,7 @@ import {
   HTTP_INTERCEPTORS
 } from '@angular/common/http';
 import { TokenInterceptor } from './interceptors/token.interceptor';
+import { ReactiveFormsModule } from '@angular/forms';
 // import { Observable } from 'rxjs';
 // import { environment } from './environments/environment';
 // import { RegisterDTO } from './dtos/user/register.dto';
@@ -29,6 +30,7 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
     RegisterComponent,
     DetailProductComponent,
     HttpClientModule,
+    ReactiveFormsModule,
   ],
   providers: [
     {

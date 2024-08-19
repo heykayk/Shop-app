@@ -9,6 +9,8 @@ import { environment } from '../../environments/environment';
 import { Console } from 'console';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CartService } from '../../services/cart.service';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-detail-product',
@@ -18,6 +20,7 @@ import { FormsModule } from '@angular/forms';
     HeaderComponent,
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
   ],
   templateUrl: './detail-product.component.html',
   styleUrl: './detail-product.component.scss'
@@ -28,7 +31,7 @@ export class DetailProductComponent implements OnInit {
   currentImageIndex: number = 0;
   quantity: number = 1;
 
-  constructor(private productService: ProductService) { }
+  constructor(private productService: ProductService, private cartService: CartService) { }
 
   ngOnInit(): void {
     this.getProductDetail();
@@ -65,6 +68,20 @@ export class DetailProductComponent implements OnInit {
     } else {
       console.error("error param: " + idParam);
     }
+  }
+
+  addToCart():void{
+    debugger;
+    if(this.product){
+      this.cartService.addToCart(this.product.id, this.quantity); 
+    } else{
+
+      console.error("Không thể thêm sảm phẩm!");
+    }
+  }
+
+  buyNow(): void{
+    
   }
 
 

@@ -3,6 +3,7 @@ package com.example.shopapp.controllers;
 import com.example.shopapp.components.LocalizationUtils;
 import com.example.shopapp.dtos.OrderDTO;
 import com.example.shopapp.models.Order;
+import com.example.shopapp.responses.OrderResponse;
 import com.example.shopapp.services.impl.IOrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +46,7 @@ public class OrderController {
     public ResponseEntity<?> getOrderById(@PathVariable("id") Long orderId){
         try{
             Order existingOrder = orderService.getOrder(orderId);
-            return ResponseEntity.ok().body(existingOrder);
+            return ResponseEntity.ok().body(OrderResponse.fromOrder(existingOrder));
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -57,7 +58,9 @@ public class OrderController {
             @Valid @PathVariable("user_id") Long userId
     ){
         try{
-            List<Order> orders = orderService.findByUserId(userId);
+            List<OrderResponse> orders = orderService.findByUserId(userId)
+                    .stream().map(OrderResponse::fromOrder)
+                    .collect(Collectors.toList());
             return ResponseEntity.ok().body(orders);
         }catch(Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());

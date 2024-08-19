@@ -11,8 +11,8 @@
                         <input type="text" [(ngModel)]="phoneNumber" required (input)="onPhoneNumberChange()"
                             name="phoneNumber" class="form-control" id="phoneNumber">
                         <div class="divider-nospace"></div>
-                        <p class="text-danger" *ngIf="phoneNumber.length < 6 && loginForm.form.touched">
-                            Phone phải có ít nhất 6 kí tự
+                        <p class="text-danger" *ngIf="phoneNumber.length < 5 && loginForm.form.touched">
+                            Phone phải có ít nhất 5 kí tự
                         </p>
                     </div>
 
@@ -46,7 +46,7 @@
                     <div class="form-group ">
                         <select class="form-control access-right" [(ngModel)]="selectedRole" name="selectedRole">
                             <option selected disabled>Quyền đăng nhập</option>
-                            <option *ngFor="let role of roles" [value]="role">
+                            <option *ngFor="let role of roles" [value]="role" style="color: black;">
                                 {{role.name}}
                             </option>
                         </select>

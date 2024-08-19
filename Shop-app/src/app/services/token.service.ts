@@ -10,7 +10,7 @@ export class TokenService{
     }
 
     getToken(): string | null {
-        return localStorage.getItem(this.TOKEN_KEY);
+        return `Bearer ${localStorage.getItem(this.TOKEN_KEY)}`;
     }
 
     setToken(token: string): void {

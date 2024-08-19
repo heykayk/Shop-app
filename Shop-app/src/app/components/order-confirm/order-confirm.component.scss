@@ -3,6 +3,14 @@
     border-radius: 50px;
 }
 
+.row{
+    margin: 0 8px;
+}
+
+table{
+    padding: 4px 4px;
+}
+
 .confirmation-container {
     margin: 50px auto;
     padding: 20px;
@@ -19,7 +27,7 @@ table{
     border-collapse: separate;
     border: 1px solid white;
     border-spacing: 0;
-    background-color: aquamarine;
+    background-color: #ecdfdf;
 }
 
 .product-header {
