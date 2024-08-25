@@ -4,36 +4,70 @@
         <h1>Xác nhận đơn hàng</h1>
         <p>Cảm ơn bạn đã đặt hàng! Dưới đây là chi tiết đơn hàng của bạn</p>
     </div>
-    <div class="row">
-        <table>
-            <thead>
-                <tr>
-                    <th scope="col" class="text-start">Sản phẩm</th>
-                    <th scope="col">Số lượng</th>
-                    <th scope="col">Đơn giá</th>
-                    <th scope="col">Tổng giá</th>
-                </tr>
-            </thead>
-            <tbody>
-                <ng-container *ngFor="let item of cartItems">
+    <div class="row" *ngIf="orderResponse">
+        <div class="col-md-6">
+            <h2 class="product-header">Thông tin sản phẩm</h2>
+            <div class="mb-3">
+                <label for="fullname" class="label-name">Họ và tên: {{orderResponse.fullname}}</label>
+                
+            </div>
+            <div class="mb-3">
+                <label for="email">Email: {{orderResponse.email}}</label>
+                
+            </div>
+            <div class="mb-3">
+                <label for="phone_number">Số điện thoại: {{orderResponse.phone_number}}</label>
+            </div>
 
+            <div class="mb-3">
+                <label for="address">Địa chỉ: {{orderResponse.address}}</label>
+            </div>
+
+            <div class="mb-3">
+                <label for="note">Note: {{orderResponse.note}}</label>
+            </div>
+            <div class="mb-3">
+                <label for="shipping_method">Shipping method: {{orderResponse.shipping_method}}</label>
+            </div>
+            <div class="mb-3">
+                <label for="payment_method">Payment method: {{orderResponse.payment_method}}</label>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h2 class="product-order">Sản phẩm đặt hàng</h2>
+            <table>
+                <thead>
                     <tr>
-                        <td>
-                            <div class="product-info">
-                                <img [src]="item.product.thumbnail" alt="" class="product-image">
-                                <span class="product-name">{{item.product.name}}</span>
-                            </div>
-                        </td>
-                        <td>{{item.quantity}}</td>
-                        <td>{{item.product.price | currency: 'VND':'symbol':'1.0-0'}}</td>
-                        <td>{{item.product.price * item.quantity | currency: 'VND':'symbol':'1.0-0'}}</td>
+                        <th scope="col" class="text-start">Sản phẩm</th>
+                        <th scope="col">Số lượng</th>
+                        <th scope="col">Đơn giá</th>
+                        <th scope="col">Tổng giá</th>
                     </tr>
-                </ng-container>
-            </tbody>
-        </table>
-        <div class="text-center mt-3">
-            <button class="btn btn-gradient">Thanh toán</button>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let item of orderResponse.order_details">
+                        <tr>
+                            <td>
+                                <div class="product-info">
+                                    <img [src]="item.product.thumbnail" alt="" class="product-image">
+                                    <span class="product-name">{{item.product.name}}</span>
+                                </div>
+                            </td>
+                            <td>{{item.quantity}}</td>
+                            <td>{{item.product.price | currency: 'VND':'symbol':'1.1-1'}}</td>
+                            <td>{{item.product.price * item.quantity | currency: 'VND':'symbol':'1.1-1'}}</td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </table>
+            <div class="text-start mt-3">
+                <h4>Tổng giá: {{orderResponse.total_money}}</h4>
+            </div>
+            
         </div>
     </div>
-</div>
+        <div class="text-center mt-3">
+            <!-- <button class="btn btn-gradient">Thanh toán</button> -->
+        </div>
+    </div>
 <app-footer></app-footer>

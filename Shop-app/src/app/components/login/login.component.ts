@@ -9,6 +9,8 @@ import { LoginResponse } from '../../responses/user/login.response';
 import { TokenService } from '../../services/token.service';
 import { RoleService } from '../../services/role.service';
 import { Role } from '../../models/role';
+import { error } from 'console';
+import { UserResponse } from '../../responses/user/user.response';
 
 @Component({
   selector: 'app-login',
@@ -26,6 +28,7 @@ export class LoginComponent {
 
   phoneNumber: string = '12343';
   password: string = '1234567890';
+  userResponse?: UserResponse;
 
 
   roles: Role[] = [];
@@ -33,24 +36,21 @@ export class LoginComponent {
   selectedRole: Role | undefined;
 
   constructor(
-    private router: Router, 
+    private router: Router,
     private userservice: UserService,
     private tokenservice: TokenService,
     private roleservice: RoleService,
-  ) {}
+  ) { }
 
-  ngOnInit(){
+  ngOnInit() {
     console.log("hello");
     // gọi api để lấy ra danh sách các role
-    debugger
     this.roleservice.getRoles().subscribe({
       next: (roles: Role[]) => {
-        debugger
         this.roles = roles;
         this.selectedRole = roles.length > 0 ? roles[0] : undefined;
       },
       error: (error: any) => {
-        debugger
         console.log("Error getting roles: ", error);
       }
     });
@@ -75,16 +75,29 @@ export class LoginComponent {
       {
         next: (response: LoginResponse) => {
           debugger
-          const {token} = response;
+          const { token } = response;
           this.tokenservice.setToken(token);
-          // this.router.navigate(["/login"]);
+
+          this.userservice.getUserDetail(token).subscribe({
+            next: (response: any) => {
+              this.userResponse = {
+                ...response,
+                date_of_birth: new Date(response.date_of_birth)
+              }
+              this.userservice.saveUserResponseToLocalStorage(this.userResponse);
+            }, complete: () => {
+              debugger;
+              this.router.navigate(["/"]);
+            }, error: (error: any) => {
+              console.error(error);
+            }
+          });
+
         },
         complete: () => {
-          debugger
           console.log('Đăng nhập thành công!!!');
         },
         error: (error: any) => {
-          debugger
           alert(`Cannot register: error: ${error.error}`);
           console.log(error);
         }

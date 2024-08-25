@@ -3,15 +3,16 @@ import { FooterComponent } from '../footer/footer.component';
 import { HeaderComponent } from '../header/header.component';
 import { ProductService } from '../../services/product.service';
 import { BrowserModule } from '@angular/platform-browser';
-import { CommonModule } from '@angular/common';
 import { Product } from '../../models/product';
 import { environment } from '../../environments/environment';
 import { start } from 'repl';
 import { Category } from '../../models/category';
-import { response } from 'express';
 import { FormsModule } from '@angular/forms';
 import { error } from 'console';
 import { CategoryService } from '../../services/category.service';
+import { Router } from '@angular/router';
+import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
@@ -20,8 +21,9 @@ import { CategoryService } from '../../services/category.service';
   imports: [
     FooterComponent,
     HeaderComponent,
-    CommonModule,
     FormsModule,
+    CommonModule,
+    NgbPopoverModule
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
@@ -37,7 +39,11 @@ export class HomeComponent implements OnInit {
   totalPages: number = 0;
   visiblePage: number[] = [];
 
-  constructor(private productService: ProductService, private categoryService:CategoryService) { }
+  constructor(
+    private productService: ProductService,
+    private categoryService: CategoryService,
+    private route: Router
+  ) { }
 
   ngOnInit(): void {
     this.getCategories();
@@ -65,8 +71,9 @@ export class HomeComponent implements OnInit {
         response.products.forEach((product: Product) => {
           product.url = `${environment.apiBaseUrl}/products/images/${product.thumbnail}`;
         });
+        debugger;
         this.products = response.products;
-        this.totalPages = response.totalPages;
+        this.totalPages = response.total_pages;
         this.visiblePage = this.generateVisiblePageArray(this.currentPage, this.totalPages);
       },
       complete: () => {
@@ -94,6 +101,8 @@ export class HomeComponent implements OnInit {
   generateVisiblePageArray(currentPage: number, totalPages: number): number[] {
     const maxVisiblePages = 5;
     const halfVisiblePages = Math.floor(maxVisiblePages / 2);
+    console.log(halfVisiblePages);
+    debugger;
 
     let startPage = Math.max(currentPage - halfVisiblePages, 1);
     let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
@@ -103,5 +112,9 @@ export class HomeComponent implements OnInit {
     }
 
     return new Array(endPage - startPage + 1).fill(0).map((_, index) => startPage + index);
+  }
+
+  onProductClick(productId: number) {
+    this.route.navigate(["/products", productId]);
   }
 }

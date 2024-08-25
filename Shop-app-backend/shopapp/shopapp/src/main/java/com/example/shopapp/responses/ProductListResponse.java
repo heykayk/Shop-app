@@ -1,5 +1,6 @@
 package com.example.shopapp.responses;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.util.List;
@@ -12,5 +13,7 @@ import java.util.List;
 @Builder
 public class ProductListResponse {
     private List<ProductResponse> products;
+
+    @JsonProperty("total_pages")
     private int totalPages;
 }

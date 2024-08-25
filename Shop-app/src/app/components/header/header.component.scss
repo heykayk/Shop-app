@@ -1,0 +1,22 @@
+.is-active {
+  background-color: aqua;
+  /* Đổi màu chữ khi được chọn, có thể thay đổi theo ý bạn */
+  font-weight: bold;
+  /* Tùy chọn: làm đậm chữ khi được chọn */
+  border-radius: 20px;
+}
+
+.popover-list{
+  padding: 10px;
+}
+
+.popover-item{
+  display: block;
+  margin-bottom: 5px;
+  text-decoration: none;
+  color: #333;
+}
+
+.popover-item:hover{
+  background-color: antiquewhite;
+}

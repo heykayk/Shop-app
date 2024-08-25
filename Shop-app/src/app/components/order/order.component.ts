@@ -11,6 +11,7 @@ import { OrderDTO } from '../../dtos/order/order.dto';
 import { Validator } from 'class-validator';
 import { OrderService } from '../../services/order.service';
 import { error } from 'console';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-order',
   standalone: true,
@@ -49,7 +50,8 @@ export class OrderComponent {
     private cartService: CartService,
     private productService: ProductService,
     private fb: FormBuilder,
-    private orderService: OrderService
+    private orderService: OrderService,
+    private route: Router
   ) {
     this.orderForm = this.fb.group({
       fullname: ['Ngô Minh Hiếu', [Validators.required]],
@@ -66,6 +68,10 @@ export class OrderComponent {
   ngOnInit(): void {
     const cart = this.cartService.getCart();
     const productIds = Array.from(cart.keys());
+
+    if (productIds.length === 0) {
+      return;
+    }
     this.productService.findProductByIds(productIds).subscribe({
       next: (products) => {
         this.cartItems = productIds.map((productId) => {
@@ -110,15 +116,16 @@ export class OrderComponent {
         product_id: cartItem.product.id,
         quantity: cartItem.quantity
       }));
-      console.log(this.orderData);
+
+      this.orderData.total_money = this.totalAmount;
 
       this.orderService.placeOrder(this.orderData).subscribe({
         next: (message: any) => {
-          debugger;
-          console.log(message);
+          alert("Đặt hàng thành công!");
+          this.cartService.clearCart();
+          this.route.navigate(['/']);
         },
         complete: () => {
-
         },
         error: (error: any) => {
           debugger;

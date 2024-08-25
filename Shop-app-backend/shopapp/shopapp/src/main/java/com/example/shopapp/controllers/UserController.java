@@ -2,14 +2,17 @@ package com.example.shopapp.controllers;
 
 import com.example.shopapp.dtos.UserDTO;
 import com.example.shopapp.dtos.UserLoginDTO;
+import com.example.shopapp.dtos.UserUpdateDTO;
 import com.example.shopapp.models.User;
 import com.example.shopapp.responses.LoginResponse;
 import com.example.shopapp.responses.RegisterResponse;
+import com.example.shopapp.responses.UserResponse;
 import com.example.shopapp.services.impl.IUserService;
 import com.example.shopapp.components.LocalizationUtils;
 import com.example.shopapp.utils.MessageKeys;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -80,6 +83,37 @@ public class UserController {
                     .builder()
                     .message(localizationUtils.getLocalizationMessage(MessageKeys.LOGIN_FAILED, e.getMessage()))
                     .build());
+        }
+    }
+
+    @PostMapping("/detail")
+    public ResponseEntity<?> getUserDetailFromToken(@RequestHeader("Authorization") String authorizationHeader){
+        try{
+            String token = authorizationHeader.substring(7);
+            User user = userService.getUserDetailFromToken(token);
+            return ResponseEntity.ok().body(UserResponse.fromUser(user));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/detail/{userId}")
+    public ResponseEntity<?> updateUserDetail(
+            @PathVariable Long userId,
+            @RequestBody UserUpdateDTO userUpdateDTO,
+            @RequestHeader("Authorization") String authorizationHeader
+    ){
+        try{
+            String extractedToken = authorizationHeader.substring(7);
+            User user = userService.getUserDetailFromToken(extractedToken);
+
+            if(user.getId() != userId){
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+            User updatedUser = userService.updateUser(userId, userUpdateDTO);
+            return ResponseEntity.ok(updatedUser);
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

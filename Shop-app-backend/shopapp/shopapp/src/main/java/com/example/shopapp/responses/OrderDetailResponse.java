@@ -12,8 +12,7 @@ import lombok.*;
 public class OrderDetailResponse {
     private Long id;
 
-    @JsonProperty("product_id")
-    private Long productId;
+    private ProductResponse product;
 
     private Float price;
 
@@ -29,7 +28,7 @@ public class OrderDetailResponse {
         return OrderDetailResponse
                 .builder()
                 .id(orderDetail.getId())
-                .productId(orderDetail.getProduct().getId())
+                .product(ProductResponse.fromProduct(orderDetail.getProduct()))
                 .price(orderDetail.getPrice())
                 .numberOfProducts(orderDetail.getNumberOfProducts())
                 .totalMoney(orderDetail.getTotalMoney())

@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CartService } from '../../services/cart.service';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-detail-product',
@@ -31,19 +32,24 @@ export class DetailProductComponent implements OnInit {
   currentImageIndex: number = 0;
   quantity: number = 1;
 
-  constructor(private productService: ProductService, private cartService: CartService) { }
+  constructor(
+    private productService: ProductService,
+    private cartService: CartService,
+    private route: ActivatedRoute
+  ) {
+    this.productId = Number(this.route.snapshot.paramMap.get('id'));
+   }
 
   ngOnInit(): void {
     this.getProductDetail();
   }
 
   getProductDetail() {
-    console.log("heloiawhefoihewf");
-    const idParam = 2;
-    if (idParam !== null) {
-      this.productId = +idParam;
-    }
-
+    // const idParam = 2;
+    // if (idParam !== null) {
+    //   this.productId = +idParam;
+    // }
+    debugger;
     if (!isNaN(this.productId)) {
       this.productService.getProductById(this.productId).subscribe({
         next: (response: any) => {
@@ -66,22 +72,22 @@ export class DetailProductComponent implements OnInit {
         }
       });
     } else {
-      console.error("error param: " + idParam);
+      console.error("error param: " + this.productId);
     }
   }
 
-  addToCart():void{
+  addToCart(): void {
     debugger;
-    if(this.product){
-      this.cartService.addToCart(this.product.id, this.quantity); 
-    } else{
-
-      console.error("Không thể thêm sảm phẩm!");
+    if (this.product) {
+      this.cartService.addToCart(this.product.id, this.quantity);
+      alert(`Sản phẩm vói id = ${this.productId} đã được thêm vào giỏ hàng`)
+    } else {
+      alert("Không thể thêm sảm phẩm!");
     }
   }
 
-  buyNow(): void{
-    
+  buyNow(): void {
+
   }
 
 
@@ -102,29 +108,29 @@ export class DetailProductComponent implements OnInit {
     this.currentImageIndex = index;
   }
 
-  previousButtonClick(){
-    if(this.product && this.product.product_images && this.product.product_images.length > 0){
+  previousButtonClick() {
+    if (this.product && this.product.product_images && this.product.product_images.length > 0) {
       this.currentImageIndex -= 1;
-      if(this.currentImageIndex < 0){
+      if (this.currentImageIndex < 0) {
         this.currentImageIndex = this.product.product_images.length - 1;
       }
     }
   }
 
-  nextButtonClick(){
-    if(this.product && this.product.product_images && this.product.product_images.length > 0){
+  nextButtonClick() {
+    if (this.product && this.product.product_images && this.product.product_images.length > 0) {
       this.currentImageIndex += 1;
-      if(this.currentImageIndex >= this.product.product_images.length){
+      if (this.currentImageIndex >= this.product.product_images.length) {
         this.currentImageIndex = 0;
       }
     }
   }
 
-  increaseClick(){
+  increaseClick() {
     this.quantity++;
   }
 
-  decreaseClick(){
-    this.quantity == 1? 1:this.quantity--;
+  decreaseClick() {
+    this.quantity == 1 ? 1 : this.quantity--;
   }
 }

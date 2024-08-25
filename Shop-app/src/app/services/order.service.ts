@@ -31,10 +31,13 @@ export class OrderService {
     }
 
     placeOrder(orderData: OrderDTO): Observable<any>{
-        debugger;
         const apiConfig = {
             headers: this.createHeaders()
         }
         return this.http.post(this.urlOrder, orderData, apiConfig);
+    }
+
+    getOrderById(orderId: number){
+        return this.http.get( `${environment.apiBaseUrl}/orders/${orderId}`);
     }
 }

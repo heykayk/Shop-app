@@ -36,8 +36,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(requests -> {
                     requests
                             .requestMatchers(
-                                    String.format("%s/users/login", apiPrefix),
-                                    String.format("%s/users/register", apiPrefix),
+                                    String.format("%s/users/**", apiPrefix),
                                     String.format("%s/roles", apiPrefix),
                                     String.format("%s/products/by-ids", apiPrefix)
                             )
