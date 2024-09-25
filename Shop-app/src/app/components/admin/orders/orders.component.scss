@@ -1,0 +1,48 @@
+.container {
+    background-color: #D9D9D9;
+    padding: 16px 16px 16px 6px;
+    width: 100%;
+    height: auto; /* Tự động điều chỉnh chiều cao */
+    font-size: 14px !important;
+    line-height: normal; /* Hoặc một giá trị nhỏ hơn như 1.5 */
+}
+
+.title-component {
+    width: 100%;
+    height: 32px;
+    background-color: #D9D9D9;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.table-main {
+    border-radius: 8px;
+    background-color: white !important;
+    width: 100%;
+    height: auto; /* Điều chỉnh lại chiều cao tự động */
+    max-height: calc(100vh - 32px - 32px); /* Chiều cao tối đa với trừ đi tiêu đề và padding */
+    overflow-y: auto; /* Thêm thanh cuộn dọc nếu nội dung vượt quá */
+    margin-top: 8px; /* Khoảng cách với phần trên */
+}
+
+table {
+    width: 100%;
+    height: auto; /* Điều chỉnh lại chiều cao tự động */
+    border-collapse: collapse; /* Để các ô bảng sát nhau */
+}
+
+th, td {
+    padding: 8px; /* Thêm khoảng cách trong ô */
+    border-bottom: 1px solid #ddd; /* Thêm đường kẻ dưới cho các ô */
+    text-align: left; /* Canh trái văn bản */
+}
+
+tr {
+    transition: background-color 0.3s; /* Thêm hiệu ứng chuyển động cho hover */
+}
+
+tr:not(.mdc-data-table__header-row):hover {
+    background-color: #f1f1f1; /* Đổi màu nền khi hover, loại trừ hàng tiêu đề */
+    cursor: pointer; /* Thay đổi con trỏ thành dạng tay chỉ */
+}

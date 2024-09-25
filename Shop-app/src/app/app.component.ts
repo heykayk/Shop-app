@@ -14,6 +14,7 @@ import {
 } from '@angular/common/http';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AdminComponent } from './components/admin/admin.component';
 // import { Observable } from 'rxjs';
 // import { environment } from './environments/environment';
 // import { RegisterDTO } from './dtos/user/register.dto';
@@ -31,6 +32,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     DetailProductComponent,
     HttpClientModule,
     ReactiveFormsModule,
+    AdminComponent,
   ],
   providers: [
     {

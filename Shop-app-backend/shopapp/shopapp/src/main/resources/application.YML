@@ -27,3 +27,8 @@ api:
 jwt:
   expiration: 2592000
   secretKey: 2Y/9RxxpJsjXceU9OTV7knWfzZ1ugO+qp80mVpAv/kg=
+springdoc:
+  api-docs:
+    path: /v3/api-docs  # Đường dẫn cho tài liệu API JSON
+  swagger-ui:
+    path: /swagger-ui.html  # Đường dẫn cho Swagger UI

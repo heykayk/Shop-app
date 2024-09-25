@@ -1,0 +1,43 @@
+<!-- order-detail-dialog.component.html -->
+<h2 mat-dialog-title>Order Details</h2>
+<mat-dialog-content>
+    <div class="order-info">
+        <p><strong>Name:</strong> {{ data.fullname }}</p>
+        <p><strong>Phone Number:</strong> {{ data.phone_number }}</p>
+        <p><strong>Total:</strong> {{ data.total_money | currency }}</p>
+    </div>
+
+    <mat-table [dataSource]="data.order_details" class="mat-elevation-z8">
+        <ng-container matColumnDef="image">
+            <th mat-header-cell *matHeaderCellDef> Image </th>
+            <td mat-cell *matCellDef="let detail">
+                <img [src]="detail.product.thumbnail" alt="{{detail.product.thumbnail}}" class="product-image">
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="productName">
+            <th mat-header-cell *matHeaderCellDef> Product Name </th>
+            <td mat-cell *matCellDef="let detail"> {{detail.product.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef> Quantity </th>
+            <td mat-cell *matCellDef="let detail"> {{detail.quantity}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef> Price </th>
+            <td mat-cell *matCellDef="let detail"> {{detail.price | currency}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="total">
+            <th mat-header-cell *matHeaderCellDef> Total </th>
+            <td mat-cell *matCellDef="let detail"> {{detail.quantity * detail.price | currency}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['image','productName', 'quantity', 'price', 'total']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['image','productName', 'quantity', 'price', 'total'];"></tr>
+    </mat-table>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button (click)="closeDialog()">Close</button>
+</mat-dialog-actions>

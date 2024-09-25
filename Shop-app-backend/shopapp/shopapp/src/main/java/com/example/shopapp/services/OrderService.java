@@ -8,9 +8,13 @@ import com.example.shopapp.repositories.OrderDetailRepository;
 import com.example.shopapp.repositories.OrderRepository;
 import com.example.shopapp.repositories.ProductRepository;
 import com.example.shopapp.repositories.UserRepository;
+import com.example.shopapp.responses.OrderResponse;
+import com.example.shopapp.responses.ProductResponse;
 import com.example.shopapp.services.impl.IOrderService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -121,5 +125,13 @@ public class OrderService implements IOrderService {
     @Override
     public List<Order> findByUserId(Long userId) {
         return orderRepository.findByUserId(userId);
+    }
+
+    @Override
+    public Page<OrderResponse> getOrdersByKeyword(String keyword, PageRequest pageRequest) {
+        Page<OrderResponse> ordersPage;
+        ordersPage = orderRepository.searchOrders(keyword, pageRequest)
+                .map(OrderResponse::fromOrder);
+        return ordersPage;
     }
 }

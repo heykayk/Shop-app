@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -23,6 +24,7 @@ import static org.springframework.http.HttpMethod.*;
 
 @Configuration
 @RequiredArgsConstructor
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableMethodSecurity
 public class WebSecurityConfig {
     @Value("${api.prefix}")
@@ -40,6 +42,12 @@ public class WebSecurityConfig {
                                     String.format("%s/roles", apiPrefix),
                                     String.format("%s/products/by-ids", apiPrefix)
                             )
+                            .permitAll()
+
+
+                            .requestMatchers("/swagger-ui/**",
+                                    "/swagger-resources/*",
+                                    "/v3/api-docs/**")
                             .permitAll()
 
                             .requestMatchers(GET,

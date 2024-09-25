@@ -1,0 +1,60 @@
+.mat-dialog-title {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+}
+
+mat-dialog-content{
+    font-size: 14px !important;
+    font-weight: 500;
+}
+
+.mat-dialog-content {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    height: 500;
+}
+
+.order-info p {
+    margin: 8px 0;
+}
+
+.mat-table {
+    width: 100%; /* Đảm bảo bảng sử dụng toàn bộ chiều rộng của nó */
+}
+
+.mat-header-cell, .mat-cell {
+    flex: 1 1 auto; /* Chia đều chiều rộng cho các cột */
+    text-align: left; /* Căn lề trái */
+    white-space: nowrap; /* Ngăn văn bản bị cắt dòng */
+    overflow: hidden; /* Ẩn văn bản tràn */
+    text-overflow: ellipsis; /* Hiển thị dấu "..." khi văn bản tràn */
+}
+
+.mat-header-row, .mat-row {
+    display: flex; /* Sử dụng Flexbox để căn chỉnh cột */
+}
+
+.mat-dialog-actions {
+    justify-content: flex-end;
+    padding: 8px;
+}
+
+.product-image {
+    width: 60px; /* Đặt chiều rộng của ảnh */
+    height: auto; /* Tự động điều chỉnh chiều cao theo tỷ lệ */
+    border-radius: 4px; /* Bo góc cho ảnh */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Hiệu ứng bóng cho ảnh */
+    margin: 4px 0; /* Khoảng cách trên dưới cho ảnh */
+}
+
+button[mat-button] {
+    background-color: #007bff;
+    color: white;
+}
+
+button[mat-button]:hover {
+    background-color: #0056b3;
+}

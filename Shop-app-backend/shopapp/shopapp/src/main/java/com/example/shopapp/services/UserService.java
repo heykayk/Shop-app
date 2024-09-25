@@ -87,13 +87,14 @@ public class UserService implements IUserService {
         if(!optionalRole.isPresent() || !roleId.equals(existingUser.getRole().getId())){
             throw new BadCredentialsException(localizationUtils.getLocalizationMessage(MessageKeys.WRONG_PHONE_PASSWORD));
         }
-        System.out.println(existingUser.getFullName());
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 phoneNumber, password,
                 existingUser.getAuthorities()
         );
         // authenticate with java Spring Security
         authenticationManager.authenticate(authenticationToken);
+        System.out.println((getClass().getName()) + "-" + existingUser.getFullName() + "-" + existingUser.getRole().getName());
+
         return jwtTokenUtil.generateToken(existingUser);
     }
 

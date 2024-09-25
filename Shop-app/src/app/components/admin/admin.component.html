@@ -1,0 +1,58 @@
+<div class="container-fluid">
+    <header class="header text-while d-flex justify-content-start mx-3">
+        <h2 class="header-title">Dashboard Admin</h2>
+        <ng-container *ngIf="userResponse">
+            <ng-container ngbPopover="Tài khoản của tôi <br> Đơn mua <br> Đăng xuất"
+                popoverTitle="User Actions" triggers="click" [placement]="'bottom'">
+                <a class="nav-link fullname" routerLink="/profile" (click)="togglePopover($event)" [ngbPopover]="popoverContent">
+                    {{userResponse.fullname}}
+                </a>
+                <ng-template #popoverContent>
+                    <div class="popover-list">
+                        <a href="#" class="popover-item" (click)="handleItemClick(0)">Tài khoản của tôi</a>
+                        <a href="#" class="popover-item" (click)="handleItemClick(1)">Đơn mua</a>
+                        <a href="#" class="popover-item" (click)="handleItemClick(2)">Đăng xuất</a>
+                    </div>
+                </ng-template>
+            </ng-container>
+        </ng-container>
+    </header>
+
+    <div class="row">
+        <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar">
+            <div class="position-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" (click)="showAdminComponet('dashboard')">
+                            <i class="fa-solid fa-chart-line"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" (click)="showAdminComponet('orders')">
+                            <i class="fa-brands fa-first-order"></i> Orders
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" (click)="showAdminComponet('categories')">
+                            <i class="fa-solid fa-list"></i> Categories
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" (click)="showAdminComponet('products')">
+                            <i class="fa-brands fa-product-hunt"></i> Products
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="col-md-10 col-lg-10 overflow-auto">
+            <ng-container [ngSwitch]="adminComponent">
+                <app-orders *ngSwitchCase="'orders'"></app-orders>
+                <app-products *ngSwitchCase="'products'"></app-products>
+                <app-categories *ngSwitchCase="'categories'"></app-categories>
+                <app-dashboard *ngSwitchCase="'dashboard'"></app-dashboard>
+            </ng-container>
+        </div>
+    </div>
+</div>
+

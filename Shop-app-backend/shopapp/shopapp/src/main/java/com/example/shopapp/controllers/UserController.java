@@ -55,7 +55,7 @@ public class UserController {
             return ResponseEntity.ok(
                     RegisterResponse.builder()
                             .message(localizationUtils.getLocalizationMessage(MessageKeys.REGISTER_SUCCESSFULLY))
-                            .user(user)
+                            .userResponse(UserResponse.fromUser(user))
                             .build()
             );
         }catch (Exception e){

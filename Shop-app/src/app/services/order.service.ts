@@ -7,6 +7,7 @@ import { Category } from '../models/category';
 import { ProductService } from './product.service';
 import { TokenService } from './token.service';
 import { OrderDTO } from '../dtos/order/order.dto';
+import { OrderResponse } from '../responses/order/order.response';
 
 
 @Injectable({
@@ -15,6 +16,7 @@ import { OrderDTO } from '../dtos/order/order.dto';
 
 export class OrderService {
     private urlOrder = `${environment.apiBaseUrl}/orders`;
+    private urlOrders = `${environment.apiBaseUrl}/orders/get-orders-by-keyword`
 
     // private apiConfig = {
     //     headers: this.createHeaders()
@@ -30,14 +32,29 @@ export class OrderService {
         });
     }
 
-    placeOrder(orderData: OrderDTO): Observable<any>{
+    placeOrder(orderData: OrderDTO): Observable<any> {
         const apiConfig = {
             headers: this.createHeaders()
         }
         return this.http.post(this.urlOrder, orderData, apiConfig);
     }
 
-    getOrderById(orderId: number){
-        return this.http.get( `${environment.apiBaseUrl}/orders/${orderId}`);
+    getOrderById(orderId: number) {
+        return this.http.get(`${environment.apiBaseUrl}/orders/${orderId}`);
+    }
+
+    getAllOrders(keyword: string, page: number, limit: number) {
+        debugger;
+        const params = new HttpParams()
+            .set('keyword', keyword)
+            .set('page', page.toString())
+            .set('limit', limit.toString());
+
+            
+        const apiConfig = {
+            headers: this.createHeaders(),
+            params: params
+        };
+        return this.http.get(this.urlOrders, apiConfig);
     }
 }
