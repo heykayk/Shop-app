@@ -103,6 +103,7 @@ public class UserService implements IUserService {
         if(jwtTokenUtil.isTokenExpired(token)){
             throw  new Exception("Token is expired");
         }
+
         String phoneNumber = jwtTokenUtil.extractPhoneNumber(token);
         Optional<User> user = userRepository.findAllByPhoneNumber(phoneNumber);
 

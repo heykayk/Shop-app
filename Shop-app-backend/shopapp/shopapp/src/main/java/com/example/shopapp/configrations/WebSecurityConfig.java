@@ -26,7 +26,7 @@ import static org.springframework.http.HttpMethod.*;
 @RequiredArgsConstructor
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableMethodSecurity
-public class WebSecurityConfig {
+public class    WebSecurityConfig {
     @Value("${api.prefix}")
     private String apiPrefix;
     private final JwtTokenFilter jwtTokenFilter;
